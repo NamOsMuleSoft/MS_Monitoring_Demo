@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:rest-api-ab="http://www.mulesoft.org/schema/mule/rest-api-ab" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/rest-api-ab http://www.mulesoft.org/schema/mule/rest-api-ab/current/mule-rest-api-ab.xsd">
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="bed04073-c624-4ed7-9726-9c1368ab5d4c" >
+		<db:my-sql-connection host="cloud-services.tools.mulesoft.com" port="30240" user="vcsi-mysql-user" password="VCSI-Anypoint1*Mule" database="mysql-db"/>
+	</db:config>
+	<rest-api-ab:config name="REST_API_AB_Config" doc:name="REST_API_AB Config" doc:id="82089bca-715a-4256-b5a2-f89ad0219059" property_host="test-ab-vinci.us-e2.cloudhub.io" property_port="80" property_protocol="HTTP" property_basePath="/api" />
+	<flow name="batchFlow" doc:id="83903831-18df-4427-bf54-a6c1efc842d7" >
+		<scheduler doc:name="Scheduler" doc:id="76a67e04-3946-4da0-a53f-8c9299cb98c4" >
+			<scheduling-strategy >
+				<fixed-frequency frequency="2" timeUnit="MINUTES"/>
+			</scheduling-strategy>
+		</scheduler>
+		<rest-api-ab:get-datas doc:name="Get datas" doc:id="4ee11cd8-50e4-47cf-ab22-9adc1fde9895" config-ref="REST_API_AB_Config" client="1"/>
+	</flow>
+</mule>
