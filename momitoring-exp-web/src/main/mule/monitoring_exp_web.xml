@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns:custom-metrics="http://www.mulesoft.org/schema/mule/custom-metrics" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd  http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd
-http://www.mulesoft.org/schema/mule/custom-metrics http://www.mulesoft.org/schema/mule/custom-metrics/current/mule-custom-metrics.xsd">
-    <http:listener-config name="rest_api_ab-httpListenerConfig">
+<mule xmlns:monitoring-process-customer="http://www.mulesoft.org/schema/mule/monitoring-process-customer" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd 
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd
+http://www.mulesoft.org/schema/mule/monitoring-process-customer http://www.mulesoft.org/schema/mule/monitoring-process-customer/current/mule-monitoring-process-customer.xsd">
+    <http:listener-config name="monitoring_exp_web-httpListenerConfig">
         <http:listener-connection host="0.0.0.0" port="8081" />
     </http:listener-config>
-    <apikit:config name="rest_api_ab-config" api="resource::16866d3b-cb76-4dba-a733-f9dd8b0ac836:rest_api_ab:1.0.1:raml:zip:rest_api_ab.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
-    <db:config name="Database_Config" doc:name="Database Config" doc:id="9350da30-16de-48e6-b8e2-c10de79766db">
-        <db:my-sql-connection host="cloud-services.demos.mulesoft.com" port="32061" user="root" password="Salesforce*12345" database="demodb" />
-    </db:config>
-    <flow name="rest_api_ab-main">
-        <http:listener config-ref="rest_api_ab-httpListenerConfig" path="/api/*">
+    <apikit:config name="monitoring_exp_web-config" api="resource::718f0e99-9f0c-43f6-9976-6763c79c63f0:monitoring_exp_web:1.0.0:raml:zip:monitoring_exp_web.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <api-gateway:autodiscovery apiId="18639951" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="ca8c46c7-8cea-442f-903f-d3a06369f324" flowRef="monitoring_exp_web-main" />
+	<monitoring-process-customer:config name="Monitoring_Process_Customer_Config" doc:name="Monitoring Process Customer Config" doc:id="8c0a6c5d-a63c-4385-8e3a-9184af9170b5" property_host="monitoringdemo-process-customer.uk-e1.cloudhub.io" property_port="80" property_protocol="HTTP" property_basePath="/api" />
+	<flow name="monitoring_exp_web-main">
+        <http:listener config-ref="monitoring_exp_web-httpListenerConfig" path="/api/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
                 <http:headers>#[vars.outboundHeaders default {}]</http:headers>
             </http:response>
@@ -18,7 +18,7 @@ http://www.mulesoft.org/schema/mule/custom-metrics http://www.mulesoft.org/schem
                 <http:headers>#[vars.outboundHeaders default {}]</http:headers>
             </http:error-response>
         </http:listener>
-        <apikit:router config-ref="rest_api_ab-config" />
+        <apikit:router config-ref="monitoring_exp_web-config" />
         <error-handler>
             <on-error-propagate type="APIKIT:BAD_REQUEST">
                 <ee:transform>
@@ -100,8 +100,8 @@ output application/json
             </on-error-propagate>
         </error-handler>
     </flow>
-    <flow name="rest_api_ab-console">
-        <http:listener config-ref="rest_api_ab-httpListenerConfig" path="/console/*">
+    <flow name="monitoring_exp_web-console">
+        <http:listener config-ref="monitoring_exp_web-httpListenerConfig" path="/console/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
                 <http:headers>#[vars.outboundHeaders default {}]</http:headers>
             </http:response>
@@ -110,7 +110,7 @@ output application/json
                 <http:headers>#[vars.outboundHeaders default {}]</http:headers>
             </http:error-response>
         </http:listener>
-        <apikit:console config-ref="rest_api_ab-config" />
+        <apikit:console config-ref="monitoring_exp_web-config" />
         <error-handler>
             <on-error-propagate type="APIKIT:NOT_FOUND">
                 <ee:transform>
@@ -127,43 +127,8 @@ output application/json
             </on-error-propagate>
         </error-handler>
     </flow>
-    <flow name="get:\data:rest_api_ab-config">
-        <logger level="INFO" message="get:\data:rest_api_ab-config" />
-		<choice doc:name="Choice" doc:id="e09afb50-81bc-49da-8dde-3bfdc8e9d2e2" >
-			<when expression="#[%dw 2.0&#10;output application/json&#10;import isNumeric from dw::core::Strings&#10;---&#10;!isNumeric(attributes.queryParams.client)]">
-				<logger level="ERROR" doc:name="Logger" doc:id="b85066b8-ec0a-4e32-91dd-f1e55e57eb17" message='#["ClientID" ++ attributes.queryParams.client]'/>
-				<custom-metrics:send doc:name="Send Custom Metric" doc:id="5166cd22-e03c-4a24-b32d-8da2f7b655f1" metricName="Sales" throwOnValidationFailure="true">
-					<custom-metrics:dimensions >
-						<custom-metrics:dimension dimensionName="order_lost" value="order" />
-					</custom-metrics:dimensions>
-					<custom-metrics:facts >
-						<custom-metrics:fact factName="order_amount" value="#[random()]" />
-					</custom-metrics:facts>
-				</custom-metrics:send>
-				<raise-error doc:name="Raise error" doc:id="bc96c006-0684-4f16-b192-bef51f1df73b" type="APP:CLIENT_NOT_NUMBER" description="Le parametre clientid n'est pas un nombre"/>
-			</when>
-		</choice>
-		<ee:transform doc:name="Transform Message" doc:id="ee566777-5ad7-459d-992c-39b6f259e7d7" >
-			<ee:message >
-				<ee:set-payload ><![CDATA[%dw 2.0
-output application/java
----
-{
-	clientId: attributes.queryParams.client
-}]]></ee:set-payload>
-			</ee:message>
-		</ee:transform>
-		<db:select doc:name="Select" doc:id="64bec6b6-3f7c-4a67-b351-d029fd377c5a" config-ref="Database_Config">
-            <db:sql><![CDATA[Select * FROM Client where clientId=:clientId]]></db:sql>
-            <db:input-parameters><![CDATA[#[payload]]]></db:input-parameters>
-        </db:select>
-        <ee:transform doc:name="Transform Message" doc:id="21bea06a-05f6-480a-86a0-9ccae68b86b7">
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-payload]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+    <flow name="get:\getCustomer:monitoring_exp_web-config">
+        <monitoring-process-customer:get-get-customers doc:name="Get get customers" doc:id="ca9a2909-6bc1-428e-9c61-e1e327582ad4" customer-id="#[attributes.queryParams.customerId]" config-ref="Monitoring_Process_Customer_Config"/>
+		<logger level="INFO" message="get:\getCustomer:monitoring_exp_web-config" />
     </flow>
 </mule>
