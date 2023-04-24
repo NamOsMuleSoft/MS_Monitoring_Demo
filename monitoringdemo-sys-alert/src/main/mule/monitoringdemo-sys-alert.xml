@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:cloudhub="http://www.mulesoft.org/schema/mule/cloudhub" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/cloudhub http://www.mulesoft.org/schema/mule/cloudhub/current/mule-cloudhub.xsd">
+	<cloudhub:config name="CloudHub_Config" doc:name="CloudHub Config" doc:id="e2169c5c-e6af-4e22-9ad4-28ab141193b2" >
+		<cloudhub:connection username="NamDemo" password="getThatThingDone1!" environment="c4e92287-28a4-4a64-b7e7-812fe6e710cd" />
+	</cloudhub:config>
+	<flow name="monitoringdemo-sys-alertFlow" doc:id="28ce945c-255a-4456-9fdc-960294d5a6a7" >
+		<scheduler doc:name="Scheduler" doc:id="124b3fb0-f9ac-4807-8845-3a0c6415dc9c" >
+			<scheduling-strategy >
+				<fixed-frequency />
+			</scheduling-strategy>
+		</scheduler>
+		<cloudhub:create-notification domain="Mulesoft" doc:name="Create Notification" doc:id="c5284e0e-c1ce-4155-b86f-7b1c16743507" config-ref="CloudHub_Config" priority="ERROR" transactionId="#[uuid()]">
+			<cloudhub:message ><![CDATA[Problem occured]]></cloudhub:message>
+			<cloudhub:custom-properties ><![CDATA[#[output application/java
+---
+{
+	"CustomerID" : "MyID"
+}]]]></cloudhub:custom-properties>
+		</cloudhub:create-notification>
+		<logger level="INFO" doc:name="Logger" doc:id="15169c20-6738-4f70-9f41-41d980645d3b" />
+	</flow>
+</mule>
