@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:monitoring-process-customer="http://www.mulesoft.org/schema/mule/monitoring-process-customer" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/monitoring-process-customer http://www.mulesoft.org/schema/mule/monitoring-process-customer/current/mule-monitoring-process-customer.xsd">
+	<monitoring-process-customer:config name="Monitoring_Process_Customer_Config" doc:name="Monitoring Process Customer Config" doc:id="07692610-b2c7-4263-81f2-5e3a5b607682" property_host="monitoringdemo-process-customer.uk-e1.cloudhub.io" property_port="80" property_protocol="HTTP" property_basePath="/api" />
+	<flow name="monitoring-batchFlow" doc:id="e78dda71-f65b-4d5d-acdb-0b366421a376" >
+		<scheduler doc:name="Scheduler" doc:id="65252620-8fb4-4055-8304-bc162c5403e4" >
+			<scheduling-strategy >
+				<fixed-frequency frequency="1" timeUnit="MINUTES"/>
+			</scheduling-strategy>
+		</scheduler>
+		<monitoring-process-customer:get-get-customers doc:name="Get get customers" doc:id="638ee012-0df1-4bf1-ac30-2ea32e97082b" config-ref="Monitoring_Process_Customer_Config" customer-id="1"/>
+	</flow>
+</mule>
