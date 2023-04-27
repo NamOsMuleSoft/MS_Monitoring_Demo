@@ -135,6 +135,6 @@ output application/json
 				<custom-metrics:fact factName="price" value="#[attributes.queryParams.price]" />
 			</custom-metrics:facts>
 		</custom-metrics:send>
-		<logger level="INFO" message="post:\doOrder:monitoring_process_order-config" />
+		<logger level="INFO" message='#["Customer " ++ attributes.queryParams.customerId]' />
     </flow>
 </mule>
