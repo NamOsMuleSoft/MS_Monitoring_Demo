@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.mycompany</groupId>
-	<artifactId>monitoring-exp-partner</artifactId>
+	<artifactId>monitoring-sys-jira</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>mule-application</packaging>
 
-	<name>monitoring-exp-partner</name>
+	<name>monitoring-sys-jira</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -47,22 +47,22 @@
 			<classifier>mule-plugin</classifier>
 		</dependency>
 		<dependency>
-			<groupId>718f0e99-9f0c-43f6-9976-6763c79c63f0</groupId>
-			<artifactId>monitoring_exp_partner</artifactId>
-			<version>1.0.0</version>
+			<groupId>org.mule.examples</groupId>
+			<artifactId>accelerator-jira-sys-api</artifactId>
+			<version>1.5.2</version>
 			<classifier>raml</classifier>
 			<type>zip</type>
 		</dependency>
 		<dependency>
-			<groupId>718f0e99-9f0c-43f6-9976-6763c79c63f0</groupId>
-			<artifactId>mule-plugin-monitoring_process_customer</artifactId>
-			<version>1.0.0</version>
+			<groupId>org.mule.modules</groupId>
+			<artifactId>mule-apikit-module</artifactId>
+			<version>1.8.2</version>
 			<classifier>mule-plugin</classifier>
 		</dependency>
 		<dependency>
-			<groupId>org.mule.modules</groupId>
-			<artifactId>mule-apikit-module</artifactId>
-			<version>1.8.4</version>
+			<groupId>com.mulesoft.connectors</groupId>
+			<artifactId>mule4-jira-connector</artifactId>
+			<version>1.2.4</version>
 			<classifier>mule-plugin</classifier>
 		</dependency>
 	</dependencies>
