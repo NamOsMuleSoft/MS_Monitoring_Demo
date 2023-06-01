@@ -48,13 +48,6 @@
 		</dependency>
 		<dependency>
 			<groupId>718f0e99-9f0c-43f6-9976-6763c79c63f0</groupId>
-			<artifactId>monitoring_process_customer</artifactId>
-			<version>1.0.0</version>
-			<classifier>raml</classifier>
-			<type>zip</type>
-		</dependency>
-		<dependency>
-			<groupId>718f0e99-9f0c-43f6-9976-6763c79c63f0</groupId>
 			<artifactId>mule-plugin-monitoring_sys</artifactId>
 			<version>1.0.0</version>
 			<classifier>mule-plugin</classifier>
@@ -64,6 +57,13 @@
 			<artifactId>mule-apikit-module</artifactId>
 			<version>1.8.4</version>
 			<classifier>mule-plugin</classifier>
+		</dependency>
+		<dependency>
+			<groupId>718f0e99-9f0c-43f6-9976-6763c79c63f0</groupId>
+			<artifactId>monitoring_process_customer</artifactId>
+			<version>1.0.1</version>
+			<classifier>raml</classifier>
+			<type>zip</type>
 		</dependency>
 	</dependencies>
 

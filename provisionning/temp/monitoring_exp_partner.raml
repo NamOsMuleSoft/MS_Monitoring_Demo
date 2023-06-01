@@ -1,0 +1,19 @@
+#%RAML 1.0
+title: Monitoring Exp Partner
+/getCustomer:
+  get:
+    queryParameters:
+      customerId:
+        example: Example
+        type: string
+    responses:
+      "200":
+        body:
+          application/json:
+            properties:
+              id:
+                example: Example
+                type: string
+              name:
+                example: Example
+                type: string

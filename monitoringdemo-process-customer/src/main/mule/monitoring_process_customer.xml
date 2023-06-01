@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns:sys-customer="http://www.mulesoft.org/schema/mule/sys-customer" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd 
-http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd
-http://www.mulesoft.org/schema/mule/sys-customer http://www.mulesoft.org/schema/mule/sys-customer/current/mule-sys-customer.xsd">
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:sys-customer="http://www.mulesoft.org/schema/mule/sys-customer" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd  http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd http://www.mulesoft.org/schema/mule/sys-customer http://www.mulesoft.org/schema/mule/sys-customer/current/mule-sys-customer.xsd">
     <http:listener-config name="monitoring_process_customer-httpListenerConfig">
         <http:listener-connection host="0.0.0.0" port="8081" />
     </http:listener-config>
-    <apikit:config name="monitoring_process_customer-config" api="resource::718f0e99-9f0c-43f6-9976-6763c79c63f0:monitoring_process_customer:1.0.0:raml:zip:monitoring_process_customer.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <apikit:config name="monitoring_process_customer-config" api="resource::718f0e99-9f0c-43f6-9976-6763c79c63f0:monitoring_process_customer:1.0.1:raml:zip:monitoring_process_customer.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
     <api-gateway:autodiscovery apiId="18639836" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="624d0c8d-3df2-42a6-a519-10f620639bb7" flowRef="monitoring_process_customer-main" />
-	<sys-customer:config name="SysCustomer_Config" doc:name="SysCustomer Config" doc:id="6e07e2ea-40d3-48e5-a252-66e03c2cc471" property_host="monitoringdemo-sys-customer.uk-e1.cloudhub.io" property_port="80" property_protocol="HTTP" property_basePath="/api" />
-	<flow name="monitoring_process_customer-main">
+    <sys-customer:config name="SysCustomer_Config" doc:name="SysCustomer Config" doc:id="6e07e2ea-40d3-48e5-a252-66e03c2cc471" property_host="monitoringdemo-sys-customer.uk-e1.cloudhub.io" property_port="80" property_protocol="HTTP" property_basePath="/api" />
+    <flow name="monitoring_process_customer-main">
         <http:listener config-ref="monitoring_process_customer-httpListenerConfig" path="/api/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
                 <http:headers>#[vars.outboundHeaders default {}]</http:headers>
@@ -128,7 +126,7 @@ output application/json
         </error-handler>
     </flow>
     <flow name="get:\getCustomer:monitoring_process_customer-config">
-        <sys-customer:get-get-customers doc:name="Get get customers" doc:id="bd44d749-68ac-4752-8c51-5c69f28c59f5" customer-id="#[attributes.queryParams.customerId]" config-ref="SysCustomer_Config"/>
-		<logger level="INFO" message="get:\getCustomer:monitoring_process_customer-config" />
+        <sys-customer:get-get-customers doc:name="Get get customers" doc:id="bd44d749-68ac-4752-8c51-5c69f28c59f5" customer-id="#[attributes.queryParams.customerId]" config-ref="SysCustomer_Config" />
+        <logger level="INFO" message="get:\getCustomer:monitoring_process_customer-config" />
     </flow>
 </mule>

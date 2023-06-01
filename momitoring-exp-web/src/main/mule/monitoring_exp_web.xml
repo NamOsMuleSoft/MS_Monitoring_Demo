@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns:monitoring-process-customer="http://www.mulesoft.org/schema/mule/monitoring-process-customer" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd 
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:monitoring-process-customer="http://www.mulesoft.org/schema/mule/monitoring-process-customer" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd 
 http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd
-http://www.mulesoft.org/schema/mule/monitoring-process-customer http://www.mulesoft.org/schema/mule/monitoring-process-customer/current/mule-monitoring-process-customer.xsd">
+http://www.mulesoft.org/schema/mule/monitoring-process-customer http://www.mulesoft.org/schema/mule/monitoring-process-customer/current/mule-monitoring-process-customer.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
     <http:listener-config name="monitoring_exp_web-httpListenerConfig">
         <http:listener-connection host="0.0.0.0" port="8081" />
     </http:listener-config>
     <apikit:config name="monitoring_exp_web-config" api="resource::718f0e99-9f0c-43f6-9976-6763c79c63f0:monitoring_exp_web:1.0.0:raml:zip:monitoring_exp_web.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
     <api-gateway:autodiscovery apiId="18639951" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="ca8c46c7-8cea-442f-903f-d3a06369f324" flowRef="monitoring_exp_web-main" />
 	<monitoring-process-customer:config name="Monitoring_Process_Customer_Config" doc:name="Monitoring Process Customer Config" doc:id="8c0a6c5d-a63c-4385-8e3a-9184af9170b5" property_host="monitoringdemo-process-customer.uk-e1.cloudhub.io" property_port="80" property_protocol="HTTP" property_basePath="/api" />
+	<json-logger:config name="JSON_Logger_Config" doc:name="JSON Logger Config" doc:id="06e43832-2010-450d-a4fe-192dfa9bee5b" environment="${mule.env}" />
 	<flow name="monitoring_exp_web-main">
         <http:listener config-ref="monitoring_exp_web-httpListenerConfig" path="/api/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
@@ -127,8 +129,10 @@ output application/json
             </on-error-propagate>
         </error-handler>
     </flow>
-    <flow name="get:\getCustomer:monitoring_exp_web-config">
-        <monitoring-process-customer:get-get-customers doc:name="Get get customers" doc:id="ca9a2909-6bc1-428e-9c61-e1e327582ad4" customer-id="#[attributes.queryParams.customerId]" config-ref="Monitoring_Process_Customer_Config"/>
+    <flow name="monitoring_exp_webFlow" doc:id="2c75f36c-b8d6-4d2b-9469-50279908201f" />
+	<flow name="get:\getCustomer:monitoring_exp_web-config">
+		<flow-ref doc:name="Flow Reference" doc:id="03881579-8f0c-4d31-a980-6aa90d5c52f3" />
+		<monitoring-process-customer:get-get-customers doc:name="Get get customers" doc:id="ca9a2909-6bc1-428e-9c61-e1e327582ad4" customer-id="#[attributes.queryParams.customerId]" config-ref="Monitoring_Process_Customer_Config"/>
 		<logger level="INFO" message="get:\getCustomer:monitoring_exp_web-config" />
     </flow>
 </mule>
