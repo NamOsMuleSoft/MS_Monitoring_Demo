@@ -1,0 +1,5 @@
+{
+	"correlationId" : "XXXXX",
+	"isRootTransaction" : true,
+	"callingApplication" : "XXXX"
+}

@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="trackingContext" format="json">
+      <types:shape format="weave" example="examples/trackingContext.json"><![CDATA[%dw 2.0
+
+type trackingContext = {|
+  correlationId: String, 
+  isRootTransaction: Boolean, 
+  callingApplication: String
+|} {"example": "{\\\"correlationId\\\":\\\"XXXXX\\\",\\\"isRootTransaction\\\":true,\\\"callingApplication\\\":\\\"XXXX\\\"}"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#3dc91289-8ef6-42a4-aacc-cab589c25668">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="trackingContext"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>
